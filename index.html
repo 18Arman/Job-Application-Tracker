@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        form div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Job Application Tracker</h1>
+    </header>
+    <div class="container">
+        <form id="job-form">
+            <div>
+                <label for="job-title">Job Title:</label>
+                <input type="text" id="job-title" required>
+            </div>
+            <div>
+                <label for="company-name">Company Name:</label>
+                <input type="text" id="company-name" required>
+            </div>
+            <div>
+                <label for="application-date">Application Date:</label>
+                <input type="date" id="application-date" required>
+            </div>
+            <div>
+                <label for="status">Status:</label>
+                <select id="status" required>
+                    <option value="Applied">Applied</option>
+                    <option value="Interview Scheduled">Interview Scheduled</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <button type="submit">Add Job</button>
+        </form>
+        <table id="job-table">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company Name</th>
+                    <th>Application Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const jobForm = document.getElementById('job-form');
+        const jobTableBody = document.querySelector('#job-table tbody');
+
+        let jobs = [];
+
+        jobForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const jobTitle = document.getElementById('job-title').value;
+            const companyName = document.getElementById('company-name').value;
+            const applicationDate = document.getElementById('application-date').value;
+            const status = document.getElementById('status').value;
+
+            const job = { jobTitle, companyName, applicationDate, status };
+            jobs.push(job);
+            renderTable();
+            jobForm.reset();
+        });
+
+        function renderTable() {
+            jobTableBody.innerHTML = '';
+            jobs.forEach((job, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${job.jobTitle}</td>
+                    <td>${job.companyName}</td>
+                    <td>${job.applicationDate}</td>
+                    <td>${job.status}</td>
+                    <td>
+                        <button onclick="editJob(${index})">Edit</button>
+                        <button onclick="deleteJob(${index})">Delete</button>
+                    </td>
+                `;
+                jobTableBody.appendChild(row);
+            });
+        }
+
+        function deleteJob(index) {
+            jobs.splice(index, 1);
+            renderTable();
+        }
+
+        function editJob(index) {
+            const job = jobs[index];
+            document.getElementById('job-title').value = job.jobTitle;
+            document.getElementById('company-name').value = job.companyName;
+            document.getElementById('application-date').value = job.applicationDate;
+            document.getElementById('status').value = job.status;
+
+            deleteJob(index);
+        }
+    </script>
+</body>
+</html>
